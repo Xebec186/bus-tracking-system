@@ -24,28 +24,29 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "Username is required")
-    @Size(min = 3, max = 50, message = "Username must be between 3 and 50 characters")
-    @Column(name = "username", unique = true, nullable = false, length = 50)
-    private String username;
+//    TODO: username
+//    @NotBlank(message = "Username is required")
+//    @Size(min = 3, max = 50, message = "Username must be between 3 and 50 characters")
+//    @Column(name = "username", unique = true, nullable = false, length = 50)
+//    private String username;
 
     @NotBlank(message = "Password is required")
-    @Column(name = "password_hash", nullable = false, length = 100)
+    @Column(nullable = false, length = 100)
     private String passwordHash;
 
     @NotBlank(message = "Email is required")
     @Email(message = "Email should be valid")
-    @Column(name = "email", unique = true, nullable = false, length = 100)
+    @Column(unique = true, nullable = false, length = 100)
     private String email;
 
     @NotBlank(message = "First name is required")
     @Size(max = 100, message = "First name cannot exceed 100 characters")
-    @Column(name = "first_name", nullable = false, length = 100)
+    @Column(nullable = false, length = 100)
     private String firstName;
 
     @NotBlank(message = "Last name is required")
     @Size(max = 100, message = "First name cannot exceed 100 characters")
-    @Column(name = "last_name", nullable = false, length = 100)
+    @Column(nullable = false, length = 100)
     private String lastName;
 
     @Pattern(regexp = "^[0-9]{10}$", message = "Phone number must be exactly 10 digits")
@@ -61,12 +62,12 @@ public class User {
 //    @Column(name = "account_status", length = 20)
 //    private AccountStatus accountStatus = AccountStatus.ACTIVE;
 
-    @Min(value = 0, message = "Failed login attempts cannot be negative")
-    @Column(name = "failed_login_attempts")
-    private Integer failedLoginAttempts = 0;
-
-    @Column(name = "last_login")
-    private LocalDateTime lastLogin;
+//    @Min(value = 0, message = "Failed login attempts cannot be negative")
+//    @Column(name = "failed_login_attempts")
+//    private Integer failedLoginAttempts = 0;
+//
+//    @Column(name = "last_login")
+//    private LocalDateTime lastLogin;
 
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;

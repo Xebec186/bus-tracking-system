@@ -25,7 +25,7 @@ public class Route {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long routeId;
+    private Long id;
 
 //    @NotBlank(message = "Route number is required")
 //    @Pattern(regexp = "^R\\d{3}$", message = "Route number must follow format: R001, R002, etc.")
@@ -36,17 +36,6 @@ public class Route {
 //    @Size(max = 100, message = "Route name cannot exceed 100 characters")
 //    @Column(name = "route_name", nullable = false, length = 100)
 //    private String routeName;
-
-//    TODO: Shouldn't startPoint be a stop
-    @NotBlank(message = "Start point is required")
-    @Size(max = 100, message = "Start point cannot exceed 100 characters")
-    @Column(nullable = false, length = 100)
-    private String startPoint;
-
-    @NotBlank(message = "End point is required")
-    @Size(max = 100, message = "End point cannot exceed 100 characters")
-    @Column(nullable = false, length = 100)
-    private String endPoint;
 
     @NotNull(message = "Distance is required")
     @DecimalMin(value = "0.1", message = "Distance must be at least 0.1 km")
@@ -68,6 +57,10 @@ public class Route {
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
     }
+
+    @OneToMany(mappedBy = "route", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("stopSequence ASC")
+    private List<RouteStop> routeStops = new ArrayList<>();
 
 //    @NotNull(message = "Estimated duration is required")
 //    @Min(value = 5, message = "Estimated duration must be at least 5 minutes")

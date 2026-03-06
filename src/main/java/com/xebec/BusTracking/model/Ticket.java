@@ -42,8 +42,8 @@ public class Ticket {
     private Bus bus;
 
     @NotBlank(message = "Ticket code is required")
-    @Column(name = "ticket_code", unique = true, nullable = false, length = 50)
-    private String ticketCode;
+    @Column(unique = true, nullable = false, length = 50)
+    private String code;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "origin_stop_id", nullable = false)

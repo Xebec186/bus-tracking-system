@@ -22,7 +22,7 @@ public class Bus {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long busId;
+    private Long id;
 
 //    @NotBlank(message = "Registration number is required")
 //    @Pattern(regexp = "^GH-\\d{4}-\\d{2}$",

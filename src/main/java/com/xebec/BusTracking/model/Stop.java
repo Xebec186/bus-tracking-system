@@ -28,7 +28,7 @@ public class Stop {
     @NotBlank(message = "Stop name is required")
     @Size(max = 100, message = "Stop name cannot exceed 100 characters")
     @Column(nullable = false, length = 100)
-    private String stopName;
+    private String name;
 
     @NotNull(message = "Latitude is required")
     @DecimalMin(value = "-90.0", message = "Latitude must be between -90 and 90")

@@ -1,57 +1,52 @@
-//package com.xebec.BusTracking.model;
-//
-//import jakarta.persistence.*;
-//import jakarta.validation.constraints.*;
-//import lombok.*;
-//
-///**
-// * JPA Entity for Route_Stops junction table
-// * Represents the many-to-many relationship between Routes and Stops
-// * with additional ordering and timing information
-// */
-//@Entity
-//@Table(name = "route_stops",
-//    uniqueConstraints = {
+package com.xebec.BusTracking.model;
+
+import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
+import lombok.*;
+
+/**
+ * JPA Entity for Route_Stops junction table
+ * Represents the many-to-many relationship between Routes and Stops
+ * with additional ordering and timing information
+ */
+@Entity
+@Table(name = "route_stops",
+    uniqueConstraints = {
 //        @UniqueConstraint(name = "unique_route_stop",
 //                         columnNames = {"route_id", "stop_id"}),
 //        @UniqueConstraint(name = "unique_route_sequence",
 //                         columnNames = {"route_id", "stop_sequence"})
-//    }
-//)
-//@Getter
-//@Setter
-//@AllArgsConstructor
-//@NoArgsConstructor
-//public class RouteStop {
-//
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    @Column(name = "route_stop_id")
-//    private Long routeStopId;
-//
-//    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-//    @JoinColumn(name = "route_id", nullable = false)
-//    @ToString.Exclude
-//    @EqualsAndHashCode.Exclude
-//    private Route route;
-//
-//    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-//    @JoinColumn(name = "stop_id", nullable = false)
-//    @ToString.Exclude
-//    @EqualsAndHashCode.Exclude
-//    private Stop stop;
-//
-//    @NotNull(message = "Stop sequence is required")
-//    @Min(value = 1, message = "Stop sequence must start from 1")
-//    @Column(name = "stop_sequence", nullable = false)
-//    private Integer stopSequence;
-//
+    }
+)
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+public class RouteStop {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "route_id", nullable = false)
+    private Route route;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "stop_id", nullable = false)
+    private Stop stop;
+
+    @NotNull(message = "Stop sequence is required")
+    @Min(value = 1, message = "Stop sequence must start from 1")
+    @Column(nullable = false)
+    private Integer stopSequence;
+
 //    @NotNull(message = "Estimated arrival time is required")
 //    @Min(value = 0, message = "Estimated arrival cannot be negative")
 //    @Max(value = 300, message = "Estimated arrival cannot exceed 300 minutes")
 //    @Column(name = "estimated_arrival_minutes", nullable = false)
 //    private Integer estimatedArrivalMinutes;
-//
+
 //    /**
 //     * Check if this is the first stop in the route
 //     */
@@ -133,4 +128,4 @@
 //            }
 //        }
 //    }
-//}
+}
