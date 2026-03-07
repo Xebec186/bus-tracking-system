@@ -1,8 +1,8 @@
 package com.xebec.BusTracking.service.impl;
 
-import com.xebec.BusTracking.security.MyUserDetails;
 import com.xebec.BusTracking.model.User;
 import com.xebec.BusTracking.repository.UserRepository;
+import com.xebec.BusTracking.security.MyUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

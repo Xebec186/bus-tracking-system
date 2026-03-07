@@ -1,88 +1,87 @@
-//package com.xebec.BusTracking.model;
-//
-//import jakarta.persistence.*;
-//import jakarta.validation.constraints.*;
-//import lombok.*;
-//import org.hibernate.annotations.CreationTimestamp;
-//
-//import java.time.Duration;
-//import java.time.LocalDate;
-//import java.time.LocalDateTime;
-//import java.time.LocalTime;
-//import java.util.Arrays;
-//import java.util.HashSet;
-//import java.util.Set;
-//
-///**
-// * JPA Entity for Schedules table
-// * Represents bus-route assignments with timing
-// */
-//@Entity
-//@Table(name = "schedules",
+package com.xebec.BusTracking.model;
+
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+
+/**
+ * JPA Entity for Schedules table.
+ * Represents bus-route assignments with timing
+ */
+@Entity
+@Table(name = "schedules"
 //    indexes = {
 //        @Index(name = "idx_active_schedules",
 //               columnList = "status, effective_date, expiry_date")
 //    }
-//)
-//@Getter
-//@Setter
-//@AllArgsConstructor
-//@NoArgsConstructor
-//public class Schedule {
-//
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    @Column(name = "schedule_id")
-//    private Long scheduleId;
-//
-//    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-//    @JoinColumn(name = "bus_id", nullable = false)
-//    @ToString.Exclude
-//    @EqualsAndHashCode.Exclude
-//    private Bus bus;
-//
-//    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-//    @JoinColumn(name = "route_id", nullable = false)
-//    @ToString.Exclude
-//    @EqualsAndHashCode.Exclude
-//    private Route route;
-//
-//    @NotNull(message = "Departure time is required")
-//    @Column(name = "departure_time", nullable = false)
-//    private LocalTime departureTime;
-//
-//    @NotNull(message = "Arrival time is required")
-//    @Column(name = "arrival_time", nullable = false)
-//    private LocalTime arrivalTime;
-//
-//    @NotBlank(message = "Days of week is required")
-//    @Pattern(regexp = "^(MON|TUE|WED|THU|FRI|SAT|SUN)(,(MON|TUE|WED|THU|FRI|SAT|SUN))*$",
-//             message = "Days must be comma-separated: MON,TUE,WED,THU,FRI,SAT,SUN")
-//    @Column(name = "days_of_week", nullable = false, length = 20)
-//    private String daysOfWeek;
-//
-//    @NotNull(message = "Effective date is required")
-//    @Column(name = "effective_date", nullable = false)
-//    private LocalDate effectiveDate;
-//
-//    @Column(name = "expiry_date")
-//    private LocalDate expiryDate;
-//
-//    @Enumerated(EnumType.STRING)
-//    @Column(name = "status", length = 20)
-//    private ScheduleStatus status = ScheduleStatus.ACTIVE;
-//
-//    @CreationTimestamp
-//    @Column(name = "created_at", nullable = false, updatable = false)
-//    private LocalDateTime createdAt;
-//
-//    // Enum for schedule status
-//    public enum ScheduleStatus {
-//        ACTIVE,
-//        INACTIVE,
-//        EXPIRED
-//    }
-//
+)
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+public class Schedule {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long scheduleId;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "bus_id", nullable = false)
+    private Bus bus;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "route_id", nullable = false)
+    private Route route;
+
+    @NotNull(message = "Departure time is required")
+    @Column(nullable = false)
+    private LocalTime departureTime;
+
+    @NotNull(message = "Arrival time is required")
+    @Column(name = "arrival_time", nullable = false)
+    private LocalTime arrivalTime;
+
+    @NotBlank(message = "Days of week is required")
+    @Pattern(regexp = "^(MON|TUE|WED|THU|FRI|SAT|SUN)(,(MON|TUE|WED|THU|FRI|SAT|SUN))*$",
+             message = "Days must be comma-separated: MON,TUE,WED,THU,FRI,SAT,SUN")
+    @Column(nullable = false, length = 20)
+    private String daysOfWeek;
+
+    @NotNull(message = "Effective date is required")
+    @Column(name = "effective_date", nullable = false)
+    private LocalDate effectiveDate;
+
+    @Column(name = "expiry_date")
+    private LocalDate expiryDate;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", length = 20)
+    private ScheduleStatus status = ScheduleStatus.ACTIVE;
+
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime createdAt;
+
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = LocalDateTime.now();
+    }
+
+    // Enum for schedule status
+    public enum ScheduleStatus {
+        ACTIVE,
+        INACTIVE,
+        EXPIRED
+    }
+
 //    /**
 //     * Check if schedule is active
 //     */
@@ -184,16 +183,16 @@
 //    /**
 //     * Get bus registration number (convenience method)
 //     */
-//    public String getBusRegistrationNumber() {
-//        return bus != null ? bus.getRegistrationNumber() : null;
-//    }
+////    public String getBusRegistrationNumber() {
+////        return bus != null ? bus.getRegistrationNumber() : null;
+////    }
 //
 //    /**
 //     * Get route number (convenience method)
 //     */
-//    public String getRouteNumber() {
-//        return route != null ? route.getRouteNumber() : null;
-//    }
+////    public String getRouteNumber() {
+////        return route != null ? route.getRouteNumber() : null;
+////    }
 //
 //    /**
 //     * Activate the schedule
@@ -253,10 +252,10 @@
 //            }
 //        }
 //    }
-//
-//    /**
-//     * Validate duration matches route's estimated duration (within tolerance)
-//     */
+
+    /**
+     * Validate duration matches route's estimated duration (within tolerance)
+     */
 //    @PrePersist
 //    @PreUpdate
 //    private void validateDurationMatchesRoute() {
@@ -274,4 +273,4 @@
 //            }
 //        }
 //    }
-//}
+}

@@ -1,15 +1,15 @@
 package com.xebec.BusTracking.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
-import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
 /**
- * JPA Entity for Buses table
+ * JPA Entity for Buses table.
  * Represents the bus fleet
  */
 @Entity
@@ -30,23 +30,19 @@ public class Bus {
 //    @Column(name = "registration_number", unique = true, nullable = false, length = 20)
 //    private String registrationNumber;
 
-    @NotNull(message = "Capacity is required")
-    @Min(value = 10, message = "Minimum capacity is 10")
-    @Max(value = 100, message = "Maximum capacity is 100")
+
     @Column(nullable = false)
     private Integer capacity;
 
-    @Size(max = 50, message = "Make cannot exceed 50 characters")
     @Column(length = 50)
     private String make;
 
-    @Size(max = 50, message = "Model cannot exceed 50 characters")
     @Column(length = 50)
     private String model;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "driver_id", referencedColumnName = "user_id")
-//    private User driver;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "driver_id")
+    private User driver;
 
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;

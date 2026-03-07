@@ -1,74 +1,80 @@
-//package com.xebec.BusTracking.model;
-//
-//import jakarta.persistence.*;
-//import jakarta.validation.constraints.*;
-//import lombok.*;
-//import org.hibernate.annotations.CreationTimestamp;
-//
-//import java.math.BigDecimal;
-//import java.time.LocalDateTime;
-//
-///**
-// * JPA Entity for Bus_Locations table
-// * Represents GPS tracking data for buses
-// */
-//@Entity
-//@Table(name = "bus_locations",
+package com.xebec.BusTracking.model;
+
+import jakarta.persistence.*;
+import jakarta.validation.constraints.DecimalMax;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Digits;
+import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
+/**
+ * JPA Entity for Bus_Locations table.
+ * Represents GPS tracking data for buses
+ */
+@Entity
+@Table(name = "bus_locations"
 //    indexes = {
 //        @Index(name = "idx_bus_timestamp", columnList = "bus_id, timestamp DESC")
 //    }
-//)
-//@Getter
-//@Setter
-//@AllArgsConstructor
-//@NoArgsConstructor
-//public class BusLocation {
-//
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    @Column(name = "location_id")
-//    private Long locationId;
-//
-//    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-//    @JoinColumn(name = "bus_id", nullable = false)
-//    @ToString.Exclude
-//    @EqualsAndHashCode.Exclude
-//    private Bus bus;
-//
-//    @NotNull(message = "Latitude is required")
-//    @DecimalMin(value = "-90.0", message = "Latitude must be between -90 and 90")
-//    @DecimalMax(value = "90.0", message = "Latitude must be between -90 and 90")
-//    @Digits(integer = 2, fraction = 8, message = "Latitude precision: 2 digits before, 8 after decimal")
-//    @Column(name = "latitude", nullable = false, precision = 10, scale = 8)
-//    private BigDecimal latitude;
-//
-//    @NotNull(message = "Longitude is required")
-//    @DecimalMin(value = "-180.0", message = "Longitude must be between -180 and 180")
-//    @DecimalMax(value = "180.0", message = "Longitude must be between -180 and 180")
-//    @Digits(integer = 3, fraction = 8, message = "Longitude precision: 3 digits before, 8 after decimal")
-//    @Column(name = "longitude", nullable = false, precision = 11, scale = 8)
-//    private BigDecimal longitude;
-//
-//    @DecimalMin(value = "0.0", message = "Speed cannot be negative")
-//    @DecimalMax(value = "120.0", message = "Speed cannot exceed 120 km/h")
-//    @Digits(integer = 3, fraction = 2, message = "Speed precision: 3 digits before, 2 after decimal")
-//    @Column(name = "speed", precision = 5, scale = 2)
-//    private BigDecimal speed;
-//
-//    @DecimalMin(value = "0.0", message = "Heading must be between 0 and 360")
-//    @DecimalMax(value = "360.0", message = "Heading must be between 0 and 360")
-//    @Digits(integer = 3, fraction = 2, message = "Heading precision: 3 digits before, 2 after decimal")
-//    @Column(name = "heading", precision = 5, scale = 2)
-//    private BigDecimal heading;
-//
-//    @NotNull(message = "Timestamp is required")
-//    @Column(name = "timestamp", nullable = false)
-//    private LocalDateTime timestamp;
-//
-//    @CreationTimestamp
-//    @Column(name = "created_at", nullable = false, updatable = false)
-//    private LocalDateTime createdAt;
-//
+)
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+public class BusLocation {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long locationId;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "bus_id", nullable = false)
+    private Bus bus;
+
+    @NotNull(message = "Latitude is required")
+    @DecimalMin(value = "-90.0", message = "Latitude must be between -90 and 90")
+    @DecimalMax(value = "90.0", message = "Latitude must be between -90 and 90")
+    @Digits(integer = 2, fraction = 8, message = "Latitude precision: 2 digits before, 8 after decimal")
+    @Column(nullable = false, precision = 10, scale = 8)
+    private BigDecimal latitude;
+
+    @NotNull(message = "Longitude is required")
+    @DecimalMin(value = "-180.0", message = "Longitude must be between -180 and 180")
+    @DecimalMax(value = "180.0", message = "Longitude must be between -180 and 180")
+    @Digits(integer = 3, fraction = 8, message = "Longitude precision: 3 digits before, 8 after decimal")
+    @Column(nullable = false, precision = 11, scale = 8)
+    private BigDecimal longitude;
+
+    @DecimalMin(value = "0.0", message = "Speed cannot be negative")
+    @DecimalMax(value = "120.0", message = "Speed cannot exceed 120 km/h")
+    @Digits(integer = 3, fraction = 2, message = "Speed precision: 3 digits before, 2 after decimal")
+    @Column(precision = 5, scale = 2)
+    private BigDecimal speed;
+
+    @DecimalMin(value = "0.0", message = "Heading must be between 0 and 360")
+    @DecimalMax(value = "360.0", message = "Heading must be between 0 and 360")
+    @Digits(integer = 3, fraction = 2, message = "Heading precision: 3 digits before, 2 after decimal")
+    @Column(precision = 5, scale = 2)
+    private BigDecimal heading;
+
+    @NotNull(message = "Timestamp is required")
+    @Column(name = "timestamp", nullable = false)
+    private LocalDateTime timestamp;
+
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime createdAt;
+
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = LocalDateTime.now();
+    }
+
 //    /**
 //     * Get coordinates as string
 //     */
@@ -177,4 +183,4 @@
 //            throw new IllegalArgumentException("Location timestamp cannot be in the future");
 //        }
 //    }
-//}
+}

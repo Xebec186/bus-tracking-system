@@ -1,8 +1,10 @@
 package com.xebec.BusTracking.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
@@ -41,7 +43,6 @@ public class Ticket {
     @JoinColumn(name = "bus_id")
     private Bus bus;
 
-    @NotBlank(message = "Ticket code is required")
     @Column(unique = true, nullable = false, length = 50)
     private String code;
 

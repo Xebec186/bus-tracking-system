@@ -1,10 +1,10 @@
 package com.xebec.BusTracking.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
-import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * JPA Entity for Routes table
+ * JPA Entity for Routes table.
  * Represents bus service routes
  */
 @Entity
@@ -37,16 +37,9 @@ public class Route {
 //    @Column(name = "route_name", nullable = false, length = 100)
 //    private String routeName;
 
-    @NotNull(message = "Distance is required")
-    @DecimalMin(value = "0.1", message = "Distance must be at least 0.1 km")
-    @DecimalMax(value = "9999.99", message = "Distance cannot exceed 9999.99 km")
-    @Digits(integer = 4, fraction = 2, message = "Distance must have max 4 digits before and 2 after decimal")
     @Column(nullable = false, precision = 6, scale = 2)
     private BigDecimal distanceKm;
 
-    @NotNull(message = "Total stops is required")
-    @Min(value = 2, message = "Route must have at least 2 stops")
-    @Max(value = 50, message = "Route cannot have more than 50 stops")
     @Column(nullable = false)
     private Integer totalStops;
 

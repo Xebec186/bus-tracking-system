@@ -31,8 +31,6 @@
 //
 //    @ManyToOne(fetch = FetchType.LAZY, optional = false)
 //    @JoinColumn(name = "user_id", nullable = false)
-//    @ToString.Exclude
-//    @EqualsAndHashCode.Exclude
 //    private User user;
 //
 //    @NotBlank(message = "Action type is required")

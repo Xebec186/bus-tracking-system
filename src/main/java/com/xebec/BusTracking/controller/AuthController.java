@@ -1,7 +1,9 @@
 package com.xebec.BusTracking.controller;
 
 import com.xebec.BusTracking.dto.SignupDto;
+import com.xebec.BusTracking.exception.PasswordsDoNotMatchException;
 import com.xebec.BusTracking.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,9 +17,9 @@ public class AuthController {
     private final UserService userService;
 
     @PostMapping("/signup")
-    public void signup(@RequestBody SignupDto signupDto) {
+    public void signup(@Valid @RequestBody SignupDto signupDto) {
         if(!signupDto.getPassword().equals(signupDto.getConfirmPassword())) {
-            throw new RuntimeException("Passwords do not match");
+            throw new PasswordsDoNotMatchException();
         }
         userService.signup(signupDto);
     }

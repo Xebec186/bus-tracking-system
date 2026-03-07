@@ -1,22 +1,24 @@
 package com.xebec.BusTracking.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
- * JPA Entity for Route_Stops junction table
+ * JPA Entity for Route_Stops junction table.
  * Represents the many-to-many relationship between Routes and Stops
  * with additional ordering and timing information
  */
 @Entity
-@Table(name = "route_stops",
-    uniqueConstraints = {
+@Table(name = "route_stops"
+//    uniqueConstraints = {
 //        @UniqueConstraint(name = "unique_route_stop",
 //                         columnNames = {"route_id", "stop_id"}),
 //        @UniqueConstraint(name = "unique_route_sequence",
 //                         columnNames = {"route_id", "stop_sequence"})
-    }
+//    }
 )
 @Getter
 @Setter
@@ -36,8 +38,6 @@ public class RouteStop {
     @JoinColumn(name = "stop_id", nullable = false)
     private Stop stop;
 
-    @NotNull(message = "Stop sequence is required")
-    @Min(value = 1, message = "Stop sequence must start from 1")
     @Column(nullable = false)
     private Integer stopSequence;
 
