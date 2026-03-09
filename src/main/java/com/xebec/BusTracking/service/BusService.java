@@ -14,4 +14,10 @@ public interface BusService {
     BusDto updateBus(Long busId, BusDto busDto);
 
     void deleteBus(Long busId);
+
+    void assignDriver(Long busId, Long driverId);
+
+    void removeDriver(Long busId);
+
+    void setToMaintenanceMode(Long busId);
 }

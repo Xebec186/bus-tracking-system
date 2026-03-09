@@ -49,4 +49,8 @@ public class User {
         this.createdAt = LocalDateTime.now();
     }
 
+    public boolean isDriver() {
+        return UserRole.DRIVER.equals(this.role);
+    }
+
 }
