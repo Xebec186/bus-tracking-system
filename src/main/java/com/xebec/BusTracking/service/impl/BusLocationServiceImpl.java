@@ -59,9 +59,9 @@ public class BusLocationServiceImpl implements BusLocationService {
         busLocation.setTimestamp(busLocationDto.getTimestamp());
         busLocation.setSpeed(busLocationDto.getSpeed());
 
-        busLocationRepository.save(busLocation);
+        BusLocation updatedBusLocation = busLocationRepository.save(busLocation);
 
-        return modelMapper.map(busLocation, BusLocationDto.class);
+        return modelMapper.map(updatedBusLocation, BusLocationDto.class);
     }
 
     @Override

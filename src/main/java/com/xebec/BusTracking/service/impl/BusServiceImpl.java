@@ -52,7 +52,8 @@ public class BusServiceImpl implements BusService {
         bus.setCapacity(busDto.getCapacity());
         bus.setRegistrationNumber(busDto.getRegistrationNumber());
 
-        return modelMapper.map(bus, BusDto.class);
+        Bus updatedBus = busRepository.save(bus);
+        return modelMapper.map(updatedBus, BusDto.class);
     }
 
     @Override
@@ -71,7 +72,6 @@ public class BusServiceImpl implements BusService {
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with given id: " + driverId));
 
         bus.assignDriver(driver);
-
         busRepository.save(bus);
     }
 
@@ -81,7 +81,6 @@ public class BusServiceImpl implements BusService {
                 .orElseThrow(() -> new ResourceNotFoundException("Bus not found with given id: " + busId));
 
         bus.removeDriver();
-
         busRepository.save(bus);
     }
 
@@ -91,7 +90,6 @@ public class BusServiceImpl implements BusService {
                 .orElseThrow(() -> new ResourceNotFoundException("Bus not found with given id: " + busId));
 
         bus.setMaintenance();
-
         busRepository.save(bus);
     }
 }

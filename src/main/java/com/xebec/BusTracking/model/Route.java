@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,85 +28,83 @@ public class Route {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-//    @NotBlank(message = "Route number is required")
-//    @Pattern(regexp = "^R\\d{3}$", message = "Route number must follow format: R001, R002, etc.")
-//    @Column(name = "route_number", unique = true, nullable = false, length = 10)
-//    private String routeNumber;
+    @Column(unique = true, nullable = false, length = 10)
+    private String number;
 
-//    @NotBlank(message = "Route name is required")
-//    @Size(max = 100, message = "Route name cannot exceed 100 characters")
-//    @Column(name = "route_name", nullable = false, length = 100)
-//    private String routeName;
+    @Column(nullable = false, length = 100)
+    private String name;
 
     @Column(nullable = false, precision = 6, scale = 2)
     private BigDecimal distanceKm;
 
+    @OneToMany(mappedBy = "route", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("stopSequence ASC")
+    private List<RouteStop> routeStops = new ArrayList<>();
+
     @Column(nullable = false)
-    private Integer totalStops;
+    private Integer estimatedDurationMinutes;
 
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
+
+    @OneToMany(mappedBy = "route", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Schedule> schedules = new ArrayList<>();
 
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
     }
 
-    @OneToMany(mappedBy = "route", cascade = CascadeType.ALL, orphanRemoval = true)
-    @OrderBy("stopSequence ASC")
-    private List<RouteStop> routeStops = new ArrayList<>();
+    public Stop getStartStop() {
+        return routeStops.isEmpty() ? null : routeStops.get(0).getStop();
+    }
 
-//    @NotNull(message = "Estimated duration is required")
-//    @Min(value = 5, message = "Estimated duration must be at least 5 minutes")
-//    @Max(value = 300, message = "Estimated duration cannot exceed 300 minutes")
-//    @Column(name = "estimated_duration_minutes", nullable = false)
-//    private Integer estimatedDurationMinutes;
+    public Stop getEndStop() {
+        return routeStops.isEmpty() ? null :
+                routeStops.get(routeStops.size() - 1).getStop();
+    }
 
-    // Relationships
-//    @OneToMany(mappedBy = "route", cascade = CascadeType.ALL, orphanRemoval = true)
-//    @OrderBy("stopSequence ASC")
-//    private List<RouteStop> routeStops = new ArrayList<>();
-//
-//    @OneToMany(mappedBy = "route")
-//    private List<Schedule> schedules = new ArrayList<>();
-//
-//    @OneToMany(mappedBy = "route")
-//    private List<Ticket> tickets = new ArrayList<>();
-//
-//    /**
-//     * Add a stop to the route
-//     */
-//    public void addRouteStop(RouteStop routeStop) {
-//        routeStops.add(routeStop);
-//        routeStop.setRoute(this);
-//    }
-//
-//    /**
-//     * Remove a stop from the route
-//     */
-//    public void removeRouteStop(RouteStop routeStop) {
-//        routeStops.remove(routeStop);
-//        routeStop.setRoute(null);
-//    }
-//
-//    /**
-//     * Calculate average speed (km/h) based on distance and duration
-//     */
-//    public BigDecimal getAverageSpeed() {
-//        if (estimatedDurationMinutes == null || estimatedDurationMinutes == 0) {
-//            return BigDecimal.ZERO;
-//        }
-//        BigDecimal hours = new BigDecimal(estimatedDurationMinutes).divide(
-//            new BigDecimal(60), 2, BigDecimal.ROUND_HALF_UP
-//        );
-//        return distanceKm.divide(hours, 2, BigDecimal.ROUND_HALF_UP);
-//    }
-//
-//    /**
-//     * Get full route description
-//     */
-//    public String getFullDescription() {
-//        return String.format("%s: %s → %s (%.2f km, %d mins)",
-//            routeNumber, startPoint, endPoint, distanceKm, estimatedDurationMinutes);
-//    }
+    /**
+     * Add a stop to the route
+     */
+    public void addRouteStop(RouteStop routeStop) {
+        routeStops.add(routeStop);
+        routeStop.setRoute(this);
+    }
+
+    /**
+     * Remove a stop from the route
+     */
+    public void removeRouteStop(RouteStop routeStop) {
+        routeStops.remove(routeStop);
+        routeStop.setRoute(null);
+    }
+
+    /**
+     * Calculate average speed (km/h) based on distance and duration
+     */
+    public BigDecimal getAverageSpeed() {
+        if (estimatedDurationMinutes == null || estimatedDurationMinutes == 0) {
+            return BigDecimal.ZERO;
+        }
+        BigDecimal hours = new BigDecimal(estimatedDurationMinutes).divide(
+            new BigDecimal(60), 2, RoundingMode.HALF_UP
+        );
+        return distanceKm.divide(hours, 2, RoundingMode.HALF_UP);
+    }
+
+    /**
+     * Get full route description
+     */
+    public String getFullDescription() {
+        String start = getStartStop() != null ? getStartStop().getName() : "Unknown";
+        String end = getEndStop() != null ? getEndStop().getName() : "Unknown";
+
+        return String.format("%s: %s → %s (%.2f km, %d mins)",
+                number,
+                start,
+                end,
+                distanceKm,
+                estimatedDurationMinutes);
+    }
 }

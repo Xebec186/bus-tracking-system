@@ -6,9 +6,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Set;
 
 /**
  * JPA Entity for Schedules table.
@@ -29,7 +31,7 @@ public class Schedule {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long scheduleId;
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "bus_id", nullable = false)
@@ -45,8 +47,11 @@ public class Schedule {
     @Column(nullable = false)
     private LocalTime arrivalTime;
 
-    @Column(nullable = false, length = 20)
-    private String daysOfWeek;
+    @ElementCollection
+    @Enumerated(EnumType.STRING)
+    @CollectionTable(name = "schedule_days", joinColumns = @JoinColumn(name = "schedule_id"))
+    @Column(name = "day_of_week")
+    private Set<DayOfWeek> daysOfWeek;
 
     @Column(nullable = false)
     private LocalDate effectiveDate;

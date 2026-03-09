@@ -1,16 +1,16 @@
 package com.xebec.BusTracking.dto;
 
 import com.xebec.BusTracking.model.ScheduleStatus;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -27,10 +27,7 @@ public class ScheduleDto {
     @NotNull(message = "Arrival time is required")
     private LocalTime arrivalTime;
 
-    @NotBlank(message = "Days of week is required")
-    @Pattern(regexp = "^(MON|TUE|WED|THU|FRI|SAT|SUN)(,(MON|TUE|WED|THU|FRI|SAT|SUN))*$",
-            message = "Days must be comma-separated: MON,TUE,WED,THU,FRI,SAT,SUN")
-    private String daysOfWeek;
+    private Set<DayOfWeek> daysOfWeek;
 
     @NotNull(message = "Effective date is required")
     private LocalDate effectiveDate;
