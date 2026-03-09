@@ -6,7 +6,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 /**
  * JPA Entity for Tickets table.
@@ -36,12 +38,8 @@ public class Ticket {
     private User passenger;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "route_id", nullable = false)
-    private Route route;
-
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "bus_id")
-    private Bus bus;
+    @JoinColumn(name = "schedule_id", nullable = false)
+    private Schedule schedule;
 
     @Column(unique = true, nullable = false, length = 50)
     private String code;
@@ -54,6 +52,12 @@ public class Ticket {
     @JoinColumn(name = "destination_stop_id", nullable = false)
     private Stop destinationStop;
 
+    @Column(nullable = false, precision = 10, scale = 2)
+    private BigDecimal price;
+
+    @Column(nullable = false)
+    private LocalTime boardingTime;
+
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
@@ -62,23 +66,14 @@ public class Ticket {
         this.createdAt = LocalDateTime.now();
     }
 
-//    TODO: Should ticket have the price
-//    @NotNull(message = "Price is required")
-//    @DecimalMin(value = "0.01", message = "Price must be positive")
-//    @DecimalMax(value = "999.99", message = "Price cannot exceed 999.99")
-//    @Digits(integer = 3, fraction = 2, message = "Price format: XXX.XX")
-//    @Column(name = "price", nullable = false, precision = 10, scale = 2)
-//    private BigDecimal price;
 
 //    TODO: ticket status
 //    @Enumerated(EnumType.STRING)
 //    @Column(name = "status", length = 20)
 //    private TicketStatus status = TicketStatus.PENDING;
-
-//    @CreationTimestamp
-//    @Column(name = "purchase_timestamp", nullable = false, updatable = false)
-//    private LocalDateTime purchaseTimestamp;
 //
+//seatNumber
+//    validatedAt
 //    @NotNull(message = "Validity date is required")
 //    @Column(name = "validity_date", nullable = false)
 //    private LocalDate validityDate;

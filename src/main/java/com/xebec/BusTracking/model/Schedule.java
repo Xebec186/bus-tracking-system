@@ -1,9 +1,6 @@
 package com.xebec.BusTracking.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -42,29 +39,22 @@ public class Schedule {
     @JoinColumn(name = "route_id", nullable = false)
     private Route route;
 
-    @NotNull(message = "Departure time is required")
     @Column(nullable = false)
     private LocalTime departureTime;
 
-    @NotNull(message = "Arrival time is required")
-    @Column(name = "arrival_time", nullable = false)
+    @Column(nullable = false)
     private LocalTime arrivalTime;
 
-    @NotBlank(message = "Days of week is required")
-    @Pattern(regexp = "^(MON|TUE|WED|THU|FRI|SAT|SUN)(,(MON|TUE|WED|THU|FRI|SAT|SUN))*$",
-             message = "Days must be comma-separated: MON,TUE,WED,THU,FRI,SAT,SUN")
     @Column(nullable = false, length = 20)
     private String daysOfWeek;
 
-    @NotNull(message = "Effective date is required")
-    @Column(name = "effective_date", nullable = false)
+    @Column(nullable = false)
     private LocalDate effectiveDate;
 
-    @Column(name = "expiry_date")
     private LocalDate expiryDate;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status", length = 20)
+    @Column(length = 20)
     private ScheduleStatus status = ScheduleStatus.ACTIVE;
 
     @Column(nullable = false, updatable = false)
@@ -75,12 +65,6 @@ public class Schedule {
         this.createdAt = LocalDateTime.now();
     }
 
-    // Enum for schedule status
-    public enum ScheduleStatus {
-        ACTIVE,
-        INACTIVE,
-        EXPIRED
-    }
 
 //    /**
 //     * Check if schedule is active
