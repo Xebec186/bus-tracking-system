@@ -18,6 +18,4 @@ public interface BusService {
     void assignDriver(Long busId, Long driverId);
 
     void removeDriver(Long busId);
-
-    void setToMaintenanceMode(Long busId);
 }

@@ -53,4 +53,7 @@ public class User {
         return UserRole.DRIVER.equals(this.role);
     }
 
+    public boolean isPassenger() {
+        return UserRole.PASSENGER.equals(this.role);
+    }
 }

@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class BusLocationDto {
 
-    private Long locationId;
+    private Long id;
 
     private Long busId;
 

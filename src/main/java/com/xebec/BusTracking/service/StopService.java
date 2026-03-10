@@ -11,6 +11,8 @@ public interface StopService {
 
     List<StopDto> getAllStops();
 
+    List<StopDto> searchStopsByName(String name);
+
     StopDto updateStop(Long stopId, StopDto stopDto);
 
     void deleteStop(Long stopId);

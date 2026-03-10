@@ -11,6 +11,12 @@ public interface ScheduleService {
 
     List<ScheduleDto> getAllSchedules();
 
+    List<ScheduleDto> getSchedulesByRouteId(Long routeId);
+
+    List<ScheduleDto> getSchedulesByBusId(Long busId);
+
+    List<ScheduleDto> getActiveSchedules();
+
     ScheduleDto updateSchedule(Long scheduleId, ScheduleDto scheduleDto);
 
     void deleteSchedule(Long scheduleId);

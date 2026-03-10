@@ -14,4 +14,16 @@ public interface TicketService {
     TicketDto updateTicket(Long ticketId, TicketDto ticketDto);
 
     void deleteTicket(Long ticketId);
+
+    TicketDto payTicket(TicketDto ticketDto);
+
+    List<TicketDto> getTicketsByPassenger(Long passengerId);
+
+    List<TicketDto> getTicketsBySchedule(Long scheduleId);
+
+    List<TicketDto> getActiveTicketsByPassenger(Long passengerId);
+
+    TicketDto validateTicket(String code);
+
+    TicketDto cancelTicket(Long ticketId);
 }

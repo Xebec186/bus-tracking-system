@@ -55,6 +55,10 @@ public class Route {
         this.createdAt = LocalDateTime.now();
     }
 
+    public int getTotalStops() {
+        return routeStops.size();
+    }
+
     public Stop getStartStop() {
         return routeStops.isEmpty() ? null : routeStops.get(0).getStop();
     }

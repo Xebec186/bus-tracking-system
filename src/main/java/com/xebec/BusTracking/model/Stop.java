@@ -40,9 +40,10 @@ public class Stop {
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    // Relationships
-//    @OneToMany(mappedBy = "stop", cascade = CascadeType.ALL)
-//    private List<RouteStop> routeStops = new ArrayList<>();
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = LocalDateTime.now();
+    }
 
     /**
      * Get coordinates as string
@@ -56,24 +57,24 @@ public class Stop {
      * @param other The other stop
      * @return Distance in kilometers
      */
-//    public double calculateDistanceTo(Stop other) {
-//        if (other == null) {
-//            return 0.0;
-//        }
-//
-//        final int EARTH_RADIUS_KM = 6371;
-//
-//        double lat1Rad = Math.toRadians(this.latitude.doubleValue());
-//        double lat2Rad = Math.toRadians(other.latitude.doubleValue());
-//        double deltaLat = Math.toRadians(other.latitude.subtract(this.latitude).doubleValue());
-//        double deltaLng = Math.toRadians(other.longitude.subtract(this.longitude).doubleValue());
-//
-//        double a = Math.sin(deltaLat / 2) * Math.sin(deltaLat / 2) +
-//                   Math.cos(lat1Rad) * Math.cos(lat2Rad) *
-//                   Math.sin(deltaLng / 2) * Math.sin(deltaLng / 2);
-//
-//        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-//
-//        return EARTH_RADIUS_KM * c;
-//    }
+    public double calculateDistanceTo(Stop other) {
+        if (other == null) {
+            return 0.0;
+        }
+
+        final int EARTH_RADIUS_KM = 6371;
+
+        double lat1Rad = Math.toRadians(this.latitude.doubleValue());
+        double lat2Rad = Math.toRadians(other.latitude.doubleValue());
+        double deltaLat = Math.toRadians(other.latitude.subtract(this.latitude).doubleValue());
+        double deltaLng = Math.toRadians(other.longitude.subtract(this.longitude).doubleValue());
+
+        double a = Math.sin(deltaLat / 2) * Math.sin(deltaLat / 2) +
+                   Math.cos(lat1Rad) * Math.cos(lat2Rad) *
+                   Math.sin(deltaLng / 2) * Math.sin(deltaLng / 2);
+
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+        return EARTH_RADIUS_KM * c;
+    }
 }

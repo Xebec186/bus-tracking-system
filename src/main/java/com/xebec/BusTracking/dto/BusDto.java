@@ -1,5 +1,6 @@
 package com.xebec.BusTracking.dto;
 
+import com.xebec.BusTracking.model.BusStatus;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -32,4 +33,6 @@ public class BusDto {
 
     @Size(max = 50, message = "Model cannot exceed 50 characters")
     private String model;
+
+    private BusStatus status;
 }

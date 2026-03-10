@@ -11,6 +11,8 @@ public interface BusLocationService {
 
     List<BusLocationDto> getAllBusLocations();
 
+    BusLocationDto getLatestLocationByBusId(Long busId);
+
     BusLocationDto updateBusLocation(Long busLocationId, BusLocationDto busLocationDto);
 
     void deleteBusLocation(Long busLocationId);

@@ -10,11 +10,14 @@ import com.xebec.BusTracking.service.BusService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class BusServiceImpl implements BusService {
 
     private final ModelMapper modelMapper;
@@ -24,8 +27,18 @@ public class BusServiceImpl implements BusService {
     @Override
     public BusDto addBus(BusDto busDto) {
         Bus bus = modelMapper.map(busDto, Bus.class);
+        bus.activate();
+
+        Long driverId = busDto.getDriverId();
+        if(driverId != null){
+            User driver = userRepository.findById(driverId)
+                    .orElseThrow(() -> new ResourceNotFoundException("User not found with given id: " + driverId));
+            bus.assignDriver(driver);
+        }
+
         Bus addedBus = busRepository.save(bus);
         return modelMapper.map(addedBus, BusDto.class);
+
     }
 
     @Override
@@ -38,7 +51,7 @@ public class BusServiceImpl implements BusService {
     @Override
     public List<BusDto> getAllBuses() {
         return busRepository.findAll().stream()
-                .map((bus -> modelMapper.map(bus, BusDto.class)))
+                .map(bus -> modelMapper.map(bus, BusDto.class))
                 .toList();
     }
 
@@ -47,10 +60,18 @@ public class BusServiceImpl implements BusService {
         Bus bus = busRepository.findById(busId)
                 .orElseThrow(() -> new ResourceNotFoundException("Bus not found with given id: " + busId));
 
-        bus.setModel(bus.getModel());
+        bus.setModel(busDto.getModel());
         bus.setMake(busDto.getMake());
         bus.setCapacity(busDto.getCapacity());
         bus.setRegistrationNumber(busDto.getRegistrationNumber());
+        bus.setStatus(busDto.getStatus());
+
+        Long driverId = busDto.getDriverId();
+        if (bus.getDriver() == null || !Objects.equals(driverId, bus.getDriver().getId())) {
+            User driver = userRepository.findById(driverId)
+                    .orElseThrow(() -> new ResourceNotFoundException("User not found with given id: " + driverId));
+            bus.assignDriver(driver);
+        }
 
         Bus updatedBus = busRepository.save(bus);
         return modelMapper.map(updatedBus, BusDto.class);
@@ -81,15 +102,6 @@ public class BusServiceImpl implements BusService {
                 .orElseThrow(() -> new ResourceNotFoundException("Bus not found with given id: " + busId));
 
         bus.removeDriver();
-        busRepository.save(bus);
-    }
-
-    @Override
-    public void setToMaintenanceMode(Long busId) {
-        Bus bus = busRepository.findById(busId)
-                .orElseThrow(() -> new ResourceNotFoundException("Bus not found with given id: " + busId));
-
-        bus.setMaintenance();
         busRepository.save(bus);
     }
 }

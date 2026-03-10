@@ -63,7 +63,7 @@ public class Bus {
     }
 
     /**
-     * Check if bus is active
+     * Check if the bus is active
      */
     public boolean isActive() {
         return BusStatus.ACTIVE.equals(this.status);
@@ -77,7 +77,7 @@ public class Bus {
     }
 
     /**
-     * Check if bus has assigned driver
+     * Check if the bus has a driver
      */
     public boolean hasDriver() {
         return this.driver != null;

@@ -11,6 +11,10 @@ public interface RouteStopService {
 
     List<RouteStopDto> getAllRouteStops();
 
+    List<RouteStopDto> getStopsByRouteId(Long routeId);
+
+    List<RouteStopDto> getStopsByRouteIdOrdered(Long routeId);
+
     RouteStopDto updateRouteStop(Long routeStopId, RouteStopDto routeStopDto);
 
     void deleteRouteStop(Long routeStopId);

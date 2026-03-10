@@ -10,11 +10,13 @@ import com.xebec.BusTracking.service.BusLocationService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class BusLocationServiceImpl implements BusLocationService {
 
     private final ModelMapper modelMapper;
@@ -46,6 +48,17 @@ public class BusLocationServiceImpl implements BusLocationService {
         return busLocationRepository.findAll().stream()
                 .map((busLocation) -> modelMapper.map(busLocation, BusLocationDto.class))
                 .toList();
+    }
+
+    @Override
+    public BusLocationDto getLatestLocationByBusId(Long busId) {
+        BusLocation busLocation = busLocationRepository
+                .findTopByBusIdOrderByTimestampDesc(busId)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("No location found for bus with id: " + busId)
+                );
+
+        return modelMapper.map(busLocation, BusLocationDto.class);
     }
 
     @Override
