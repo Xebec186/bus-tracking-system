@@ -37,6 +37,7 @@ public class BusLocationServiceImpl implements BusLocationService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public BusLocationDto getBusLocationById(Long busLocationId) {
         BusLocation busLocation = busLocationRepository.findById(busLocationId)
                 .orElseThrow(() -> new ResourceNotFoundException("Bus location not found with id: " + busLocationId));
@@ -44,6 +45,7 @@ public class BusLocationServiceImpl implements BusLocationService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<BusLocationDto> getAllBusLocations() {
         return busLocationRepository.findAll().stream()
                 .map((busLocation) -> modelMapper.map(busLocation, BusLocationDto.class))
@@ -51,6 +53,7 @@ public class BusLocationServiceImpl implements BusLocationService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public BusLocationDto getLatestLocationByBusId(Long busId) {
         BusLocation busLocation = busLocationRepository
                 .findTopByBusIdOrderByTimestampDesc(busId)

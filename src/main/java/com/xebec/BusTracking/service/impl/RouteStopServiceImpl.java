@@ -45,6 +45,7 @@ public class RouteStopServiceImpl implements RouteStopService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public RouteStopDto getRouteStopById(Long routeStopId) {
         RouteStop routeStop = routeStopRepository.findById(routeStopId)
                 .orElseThrow(() -> new ResourceNotFoundException("Route stop not found with given id: " + routeStopId));
@@ -52,6 +53,7 @@ public class RouteStopServiceImpl implements RouteStopService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<RouteStopDto> getAllRouteStops() {
         return routeStopRepository.findAll().stream()
                 .map(routeStop -> modelMapper.map(routeStop, RouteStopDto.class))
@@ -59,6 +61,7 @@ public class RouteStopServiceImpl implements RouteStopService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<RouteStopDto> getStopsByRouteId(Long routeId) {
         return routeStopRepository.findByRouteId(routeId).stream()
                 .map(routeStop -> modelMapper.map(routeStop, RouteStopDto.class))
@@ -66,6 +69,7 @@ public class RouteStopServiceImpl implements RouteStopService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<RouteStopDto> getStopsByRouteIdOrdered(Long routeId) {
         return routeStopRepository.findByRouteIdOrderByStopSequence(routeId).stream()
                 .map(routeStop -> modelMapper.map(routeStop, RouteStopDto.class))

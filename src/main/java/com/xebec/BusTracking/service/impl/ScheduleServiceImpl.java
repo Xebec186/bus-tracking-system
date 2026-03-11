@@ -46,6 +46,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public ScheduleDto getScheduleById(Long scheduleId) {
         Schedule schedule = scheduleRepository.findById(scheduleId)
                 .orElseThrow(() -> new ResourceNotFoundException("Schedule not found with given id: " + scheduleId));
@@ -53,6 +54,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<ScheduleDto> getAllSchedules() {
         return scheduleRepository.findAll().stream()
                 .map((schedule) -> modelMapper.map(schedule, ScheduleDto.class))
@@ -60,6 +62,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<ScheduleDto> getSchedulesByRouteId(Long routeId) {
         return scheduleRepository.findByRouteId(routeId).stream()
                 .map((schedule) -> modelMapper.map(schedule, ScheduleDto.class))
@@ -67,6 +70,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<ScheduleDto> getSchedulesByBusId(Long busId) {
         return scheduleRepository.findByBusId(busId).stream()
                 .map((schedule) -> modelMapper.map(schedule, ScheduleDto.class))
@@ -74,6 +78,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<ScheduleDto> getActiveSchedules() {
         return scheduleRepository.findAll().stream()
                 .filter(Schedule::isActive)

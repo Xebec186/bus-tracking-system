@@ -33,6 +33,7 @@ public class RouteServiceImpl implements RouteService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public RouteDto getRouteById(Long routeId) {
         Route route = routeRepository.findById(routeId)
                 .orElseThrow(() -> new ResourceNotFoundException("Route not found with given id: " + routeId));
@@ -40,6 +41,7 @@ public class RouteServiceImpl implements RouteService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<RouteDto> getAllRoutes() {
         return routeRepository.findAll().stream()
                 .map((route) -> modelMapper.map(route, RouteDto.class))

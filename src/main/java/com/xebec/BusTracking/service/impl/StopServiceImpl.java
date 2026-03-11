@@ -28,6 +28,7 @@ public class StopServiceImpl implements StopService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public StopDto getStopById(Long stopId) {
         Stop stop = stopRepository.findById(stopId)
                 .orElseThrow(() -> new ResourceNotFoundException("Stop not found with given id: " + stopId));
@@ -35,6 +36,7 @@ public class StopServiceImpl implements StopService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<StopDto> getAllStops() {
         return stopRepository.findAll().stream()
                 .map(stop -> modelMapper.map(stop, StopDto.class))
@@ -42,6 +44,7 @@ public class StopServiceImpl implements StopService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<StopDto> searchStopsByName(String name) {
         if (name == null || name.trim().isEmpty()) {
             return List.of();

@@ -42,6 +42,7 @@ public class BusServiceImpl implements BusService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public BusDto getBusById(Long busId) {
         Bus bus = busRepository.findById(busId)
                 .orElseThrow(() -> new ResourceNotFoundException("Bus not found with given id: " + busId));
@@ -49,6 +50,7 @@ public class BusServiceImpl implements BusService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<BusDto> getAllBuses() {
         return busRepository.findAll().stream()
                 .map(bus -> modelMapper.map(bus, BusDto.class))

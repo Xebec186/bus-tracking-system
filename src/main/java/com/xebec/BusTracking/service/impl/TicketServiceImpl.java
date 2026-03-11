@@ -59,6 +59,7 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public TicketDto getTicket(Long ticketId) {
         Ticket ticket = ticketRepository.findById(ticketId)
                 .orElseThrow(() -> new ResourceNotFoundException("Ticket not found with given id: " + ticketId));
@@ -66,6 +67,7 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<TicketDto> getAllTickets() {
         return ticketRepository.findAll().stream()
                 .map(ticket -> modelMapper.map(ticket, TicketDto.class))
@@ -92,6 +94,7 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<TicketDto> getTicketsByPassenger(Long passengerId) {
         return ticketRepository.findByPassengerId(passengerId).stream()
                 .map(ticket -> modelMapper.map(ticket, TicketDto.class))
@@ -99,6 +102,7 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<TicketDto> getTicketsBySchedule(Long scheduleId) {
         return ticketRepository.findByScheduleId(scheduleId).stream()
                 .map(ticket -> modelMapper.map(ticket, TicketDto.class))
@@ -106,6 +110,7 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<TicketDto> getActiveTicketsByPassenger(Long passengerId) {
         return ticketRepository.findByPassengerId(passengerId).stream()
                 .filter(ticket -> ticket.getStatus().equals(TicketStatus.PAID) || ticket.getStatus().equals(TicketStatus.PENDING))
