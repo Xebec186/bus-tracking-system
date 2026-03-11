@@ -9,4 +9,6 @@ public interface RouteStopRepository extends JpaRepository<RouteStop, Long> {
     List<RouteStop> findByRouteId(Long routeId);
 
     List<RouteStop> findByRouteIdOrderByStopSequence(Long routeId);
+
+    List<RouteStop> findByRouteIdOrderByStopOrder(Long routeId);
 }

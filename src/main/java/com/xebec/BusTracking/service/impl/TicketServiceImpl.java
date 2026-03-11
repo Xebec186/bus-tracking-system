@@ -3,17 +3,20 @@ package com.xebec.BusTracking.service.impl;
 import com.xebec.BusTracking.dto.TicketDto;
 import com.xebec.BusTracking.exception.ResourceNotFoundException;
 import com.xebec.BusTracking.model.*;
-import com.xebec.BusTracking.repository.ScheduleRepository;
-import com.xebec.BusTracking.repository.StopRepository;
-import com.xebec.BusTracking.repository.TicketRepository;
-import com.xebec.BusTracking.repository.UserRepository;
+import com.xebec.BusTracking.repository.*;
 import com.xebec.BusTracking.service.TicketService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @Transactional
@@ -23,7 +26,9 @@ public class TicketServiceImpl implements TicketService {
     private final TicketRepository ticketRepository;
     private final UserRepository userRepository;
     private final ScheduleRepository scheduleRepository;
+    private final ScheduleDayRepository scheduleDayRepository;
     private final StopRepository stopRepository;
+    private final RouteStopRepository routeStopRepository;
     private final ModelMapper modelMapper;
 
     @Override
@@ -43,15 +48,26 @@ public class TicketServiceImpl implements TicketService {
 
         Long originStopId = ticketDto.getOriginStopId();
         Long destinationStopId = ticketDto.getDestinationStopId();
+        LocalDate ticketDate = ticketDto.getDate();
+        DayOfWeek day = ticketDate.getDayOfWeek();
+
         Stop originStop = stopRepository.findById(originStopId)
                         .orElseThrow(() -> new ResourceNotFoundException("Stop not found with given id: " + originStopId));
-        Stop destinatiionStop = stopRepository.findById(destinationStopId)
+        Stop destinationStop = stopRepository.findById(destinationStopId)
                 .orElseThrow(() -> new ResourceNotFoundException("Stop not found with given id: " + destinationStopId));
+        ScheduleDay scheduleDay = scheduleDayRepository.findByScheduleIdAndDayOfWeek(scheduleId, day)
+                .orElseThrow(() -> new ResourceNotFoundException("Schedule not available on: " + day));
 
         ticket.setPassenger(user);
         ticket.setSchedule(schedule);
         ticket.setOriginStop(originStop);
-        ticket.setDestinationStop(destinatiionStop);
+        ticket.setDestinationStop(destinationStop);
+        ticket.setPrice(calculatePrice(schedule, originStop, destinationStop));
+        ticket.setBoardingTime(scheduleDay.getDepartureTime().minusMinutes(30));
+        ticket.setValidityDate(ticketDate.plusDays(1));
+
+        String ticketCode = generateTicketCode(scheduleId, ticketDate);
+        ticket.setCode(ticketCode);
 
         Ticket addedTicket = ticketRepository.save(ticket);
 
@@ -135,5 +151,53 @@ public class TicketServiceImpl implements TicketService {
         ticket.cancel();
         Ticket canclledTicket = ticketRepository.save(ticket);
         return modelMapper.map(canclledTicket, TicketDto.class);
+    }
+
+    @Override
+    public String generateTicketCode(Long scheduleId, LocalDate ticketDate) {
+
+        String prefix = "BUS";
+
+        String datePart = ticketDate.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+
+        String randomPart = UUID.randomUUID()
+                .toString()
+                .replace("-", "")
+                .substring(0, 5)
+                .toUpperCase();
+
+        return prefix + "-" + scheduleId + "-" + datePart + "-" + randomPart;
+    }
+
+    @Override
+    public BigDecimal calculatePrice(Schedule schedule, Stop origin, Stop destination) {
+
+        List<RouteStop> routeStops = routeStopRepository
+                .findByRouteIdOrderByStopOrder(schedule.getRoute().getId());
+
+        RouteStop originRouteStop = routeStops.stream()
+                .filter(rs -> rs.getStop().getId().equals(origin.getId()))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Origin stop not part of route"));
+
+        RouteStop destinationRouteStop = routeStops.stream()
+                .filter(rs -> rs.getStop().getId().equals(destination.getId()))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Destination stop not part of route"));
+
+        int originOrder = originRouteStop.getStopSequence();
+        int destinationOrder = destinationRouteStop.getStopSequence();
+
+        if (destinationOrder <= originOrder) {
+            throw new IllegalArgumentException("Destination must come after origin stop");
+        }
+
+        int segments = destinationOrder - originOrder;
+
+        BigDecimal pricePerSegment = BigDecimal.valueOf(2.5);
+        BigDecimal segmentsCount = BigDecimal.valueOf(segments);
+
+        return pricePerSegment.multiply(segmentsCount)
+                .setScale(2, RoundingMode.HALF_UP);
     }
 }

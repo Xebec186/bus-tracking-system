@@ -1,11 +1,19 @@
 package com.xebec.BusTracking.service;
 
 import com.xebec.BusTracking.dto.TicketDto;
+import com.xebec.BusTracking.model.Schedule;
+import com.xebec.BusTracking.model.Stop;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 public interface TicketService {
     TicketDto addTicket(TicketDto ticketDto);
+
+    String generateTicketCode(Long scheduleId, LocalDate ticketDate);
+
+    BigDecimal calculatePrice(Schedule schedule, Stop originStop, Stop destinationStop);
 
     TicketDto getTicket(Long ticketId);
 
@@ -24,4 +32,5 @@ public interface TicketService {
     TicketDto validateTicket(String code);
 
     TicketDto cancelTicket(Long ticketId);
+
 }

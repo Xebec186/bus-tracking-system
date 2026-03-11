@@ -56,6 +56,10 @@ public class Ticket {
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal price;
 
+
+    @Column(nullable = false)
+    private LocalDate date;
+
     @Column(nullable = false)
     private LocalTime boardingTime;
 

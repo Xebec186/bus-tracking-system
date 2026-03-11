@@ -22,21 +22,17 @@ public class TicketDto {
 
     private Long scheduleId;
 
-    @NotBlank(message = "Ticket code is required")
     private String code;
 
     private Long originStopId;
     private Long destinationStopId;
 
-    @NotNull(message = "Price is required")
-    @DecimalMin(value = "0.01", message = "Price must be positive")
-    @DecimalMax(value = "999.99", message = "Price cannot exceed 999.99")
-    @Digits(integer = 3, fraction = 2, message = "Price format: XXX.XX")
     private BigDecimal price;
+
+    private LocalDate date;
 
     private LocalTime boardingTime;
 
-    @NotNull(message = "Validity date is required")
     private LocalDate validityDate;
 
     private LocalDateTime validatedAt;

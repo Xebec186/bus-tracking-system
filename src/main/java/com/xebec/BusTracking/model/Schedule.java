@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.*;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -38,17 +39,8 @@ public class Schedule {
     @JoinColumn(name = "route_id", nullable = false)
     private Route route;
 
-    @Column(nullable = false)
-    private LocalTime departureTime;
-
-    @Column(nullable = false)
-    private LocalTime arrivalTime;
-
-    @ElementCollection
-    @Enumerated(EnumType.STRING)
-    @CollectionTable(name = "schedule_days", joinColumns = @JoinColumn(name = "schedule_id"))
-    @Column(name = "day_of_week")
-    private Set<DayOfWeek> daysOfWeek;
+    @OneToMany(mappedBy = "schedule", cascade = CascadeType.ALL)
+    private List<ScheduleDay> scheduleDays;
 
     @Column(nullable = false)
     private LocalDate effectiveDate;
@@ -95,41 +87,6 @@ public class Schedule {
         return LocalDate.now().isAfter(expiryDate);
     }
 
-    /**
-     * Get schedule duration in minutes
-     */
-    public long getDurationMinutes() {
-        if (departureTime == null || arrivalTime == null) {
-            return 0;
-        }
-
-        Duration duration;
-        if (arrivalTime.isBefore(departureTime)) {
-            // Next day arrival
-            duration = Duration.between(departureTime, LocalTime.MAX)
-                     .plus(Duration.between(LocalTime.MIN, arrivalTime))
-                     .plusMinutes(1);
-        } else {
-            duration = Duration.between(departureTime, arrivalTime);
-        }
-
-        return duration.toMinutes();
-    }
-
-    /**
-     * Get formatted duration
-     */
-    public String getFormattedDuration() {
-        long minutes = getDurationMinutes();
-        long hours = minutes / 60;
-        long mins = minutes % 60;
-
-        if (hours > 0) {
-            return String.format("%dh %dm", hours, mins);
-        } else {
-            return String.format("%dm", mins);
-        }
-    }
 
     /**
      * Get bus registration number
@@ -164,26 +121,5 @@ public class Schedule {
      */
     public void expire() {
         this.status = ScheduleStatus.EXPIRED;
-    }
-
-    /**
-     * Validate duration matches route's estimated duration (within tolerance)
-     */
-    @PrePersist
-    @PreUpdate
-    private void validateDurationMatchesRoute() {
-        if (route != null && route.getEstimatedDurationMinutes() != null) {
-            long scheduleDuration = getDurationMinutes();
-            int routeDuration = route.getEstimatedDurationMinutes();
-
-            // Allow ±30 minutes tolerance
-            if (scheduleDuration < routeDuration - 30 ||
-                scheduleDuration > routeDuration + 30) {
-                throw new IllegalArgumentException(
-                    String.format("Schedule duration %d minutes is too different from route duration %d minutes",
-                        scheduleDuration, routeDuration)
-                );
-            }
-        }
     }
 }
