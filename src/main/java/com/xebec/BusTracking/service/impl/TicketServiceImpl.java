@@ -112,8 +112,7 @@ public class TicketServiceImpl implements TicketService {
     @Override
     @Transactional(readOnly = true)
     public List<TicketDto> getActiveTicketsByPassenger(Long passengerId) {
-        return ticketRepository.findByPassengerId(passengerId).stream()
-                .filter(ticket -> ticket.getStatus().equals(TicketStatus.PAID) || ticket.getStatus().equals(TicketStatus.PENDING))
+        return ticketRepository.findByPassengerIdAndStatusIn(passengerId, List.of(TicketStatus.PAID, TicketStatus.PENDING)).stream()
                 .map(ticket -> modelMapper.map(ticket, TicketDto.class))
                 .toList();
     }

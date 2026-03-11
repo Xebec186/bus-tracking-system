@@ -5,6 +5,7 @@ import com.xebec.BusTracking.exception.ResourceNotFoundException;
 import com.xebec.BusTracking.model.Bus;
 import com.xebec.BusTracking.model.Route;
 import com.xebec.BusTracking.model.Schedule;
+import com.xebec.BusTracking.model.ScheduleStatus;
 import com.xebec.BusTracking.repository.BusRepository;
 import com.xebec.BusTracking.repository.RouteRepository;
 import com.xebec.BusTracking.repository.ScheduleRepository;
@@ -80,8 +81,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Override
     @Transactional(readOnly = true)
     public List<ScheduleDto> getActiveSchedules() {
-        return scheduleRepository.findAll().stream()
-                .filter(Schedule::isActive)
+        return scheduleRepository.findByStatus(ScheduleStatus.ACTIVE).stream()
                 .map((schedule) -> modelMapper.map(schedule, ScheduleDto.class))
                 .toList();
     }

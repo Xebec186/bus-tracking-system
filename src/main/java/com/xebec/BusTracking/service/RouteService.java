@@ -14,8 +14,4 @@ public interface RouteService {
     RouteDto updateRoute(Long routeId, RouteDto routeDto);
 
     void deleteRoute(Long routeId);
-
-    void addStopToRoute(Long routeId, Long routeStopId);
-
-    void removeStopFromRoute(Long routeId, Long routeStopId);
 }

@@ -1,7 +1,6 @@
 package com.xebec.BusTracking.dto;
 
 import com.xebec.BusTracking.model.TicketStatus;
-import jakarta.persistence.Column;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

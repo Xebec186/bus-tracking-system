@@ -37,15 +37,15 @@ public class Route {
     @Column(nullable = false, precision = 6, scale = 2)
     private BigDecimal distanceKm;
 
-    @OneToMany(mappedBy = "route", cascade = CascadeType.ALL, orphanRemoval = true)
-    @OrderBy("stopSequence ASC")
-    private List<RouteStop> routeStops = new ArrayList<>();
-
     @Column(nullable = false)
     private Integer estimatedDurationMinutes;
 
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
+
+    @OneToMany(mappedBy = "route", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("stopSequence ASC")
+    private List<RouteStop> routeStops = new ArrayList<>();
 
     @OneToMany(mappedBy = "route", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Schedule> schedules = new ArrayList<>();

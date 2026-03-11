@@ -3,7 +3,6 @@ package com.xebec.BusTracking.service.impl;
 import com.xebec.BusTracking.dto.RouteDto;
 import com.xebec.BusTracking.exception.ResourceNotFoundException;
 import com.xebec.BusTracking.model.Route;
-import com.xebec.BusTracking.model.RouteStop;
 import com.xebec.BusTracking.repository.RouteRepository;
 import com.xebec.BusTracking.repository.RouteStopRepository;
 import com.xebec.BusTracking.service.RouteService;
@@ -68,29 +67,5 @@ public class RouteServiceImpl implements RouteService {
         Route route = routeRepository.findById(routeId)
                 .orElseThrow(() -> new ResourceNotFoundException("Route not found with given id: " + routeId));
         routeRepository.delete(route);
-    }
-
-    @Override
-    public void addStopToRoute(Long routeId, Long routeStopId) {
-        Route route = routeRepository.findById(routeId)
-                .orElseThrow(() -> new ResourceNotFoundException("Route not found with given id: " + routeId));
-
-        RouteStop routeStop = routeStopRepository.findById(routeStopId)
-                .orElseThrow(() -> new ResourceNotFoundException("Route stop not found with given id: "  + routeStopId));
-
-        route.addRouteStop(routeStop);
-        routeRepository.save(route);
-    }
-
-    @Override
-    public void removeStopFromRoute(Long routeId, Long routeStopId) {
-        Route route = routeRepository.findById(routeId)
-                .orElseThrow(() -> new ResourceNotFoundException("Route not found with given id: " + routeId));
-
-        RouteStop routeStop = routeStopRepository.findById(routeStopId)
-                .orElseThrow(() -> new ResourceNotFoundException("Route stop not found with given id: "  + routeStopId));
-
-        route.removeRouteStop(routeStop);
-        routeRepository.save(route);
     }
 }
