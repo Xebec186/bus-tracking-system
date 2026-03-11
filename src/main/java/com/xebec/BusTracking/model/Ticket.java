@@ -97,7 +97,7 @@ public class Ticket {
     }
 
     /**
-     * Check if ticket is expired
+     * Check if the ticket is expired
      */
     public boolean isExpired() {
         return TicketStatus.EXPIRED.equals(this.status) ||
@@ -105,7 +105,7 @@ public class Ticket {
     }
 
     /**
-     * Check if ticket is cancelled
+     * Check if ticket is canceled
      */
     public boolean isCancelled() {
         return TicketStatus.CANCELLED.equals(this.status);
@@ -115,14 +115,14 @@ public class Ticket {
      * Check if ticket can be validated (used)
      */
     public boolean canBeValidated() {
-        return TicketStatus.PAID.equals(this.status) &&
+        return isPaid() &&
                !isExpired() &&
                validityDate != null &&
                !LocalDate.now().isAfter(validityDate);
     }
 
     /**
-     * Check if ticket can be cancelled
+     * Check if ticket can be canceled
      */
     public boolean canBeCancelled() {
         return (TicketStatus.PENDING.equals(this.status) ||

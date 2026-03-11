@@ -85,12 +85,9 @@ public class TicketServiceImpl implements TicketService {
         Ticket ticket = ticketRepository.findById(ticketId)
                 .orElseThrow(() -> new ResourceNotFoundException("Ticket not found with given id: " + ticketId));
 
-        ticket.setStatus(TicketStatus.PAID);
-        ticket.setPaymentMethod(ticketDto.getPaymentMethod());
-        ticket.setPaymentReference(ticketDto.getPaymentReference());
+        ticket.markAsPaid(ticketDto.getPaymentMethod(), ticketDto.getPaymentReference());
 
         Ticket paidTicket = ticketRepository.save(ticket);
-
         return modelMapper.map(paidTicket, TicketDto.class);
     }
 
