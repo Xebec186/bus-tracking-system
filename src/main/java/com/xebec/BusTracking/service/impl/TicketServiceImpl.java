@@ -118,7 +118,13 @@ public class TicketServiceImpl implements TicketService {
 
     @Override
     public TicketDto validateTicket(String code) {
-        return null;
+        Ticket ticket = ticketRepository.findByCode(code)
+                .orElseThrow(() -> new ResourceNotFoundException("Ticket not found with given code: " + code));
+
+        ticket.validate();
+
+        Ticket validatedTicket = ticketRepository.save(ticket);
+        return modelMapper.map(validatedTicket, TicketDto.class);
     }
 
     @Override

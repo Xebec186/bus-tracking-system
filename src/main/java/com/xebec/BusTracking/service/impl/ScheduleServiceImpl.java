@@ -12,11 +12,13 @@ import com.xebec.BusTracking.service.ScheduleService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class ScheduleServiceImpl implements ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
@@ -96,6 +98,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         if(!routeId.equals(schedule.getRoute().getId())) {
             Route route = routeRepository.findById(routeId)
                     .orElseThrow(() -> new ResourceNotFoundException("Route not found with given id: " + routeId));
+            schedule.setRoute(route);
         }
 
         schedule.setDepartureTime(scheduleDto.getDepartureTime());
