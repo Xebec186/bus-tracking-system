@@ -17,7 +17,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ScheduleDto {
-    private Long scheduleId;
+    private Long id;
     private Long busId;
     private Long routeId;
 

@@ -2,9 +2,11 @@ package com.xebec.BusTracking.service.impl;
 
 import com.xebec.BusTracking.dto.TicketDto;
 import com.xebec.BusTracking.exception.ResourceNotFoundException;
-import com.xebec.BusTracking.model.Ticket;
-import com.xebec.BusTracking.model.TicketStatus;
+import com.xebec.BusTracking.model.*;
+import com.xebec.BusTracking.repository.ScheduleRepository;
+import com.xebec.BusTracking.repository.StopRepository;
 import com.xebec.BusTracking.repository.TicketRepository;
+import com.xebec.BusTracking.repository.UserRepository;
 import com.xebec.BusTracking.service.TicketService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -19,26 +21,55 @@ import java.util.List;
 public class TicketServiceImpl implements TicketService {
 
     private final TicketRepository ticketRepository;
+    private final UserRepository userRepository;
+    private final ScheduleRepository scheduleRepository;
+    private final StopRepository stopRepository;
     private final ModelMapper modelMapper;
 
     @Override
     public TicketDto addTicket(TicketDto ticketDto) {
-        return null;
+        Ticket ticket = modelMapper.map(ticketDto, Ticket.class);
+
+        Long passengerId = ticketDto.getPassengerId();
+        User user = userRepository.findById(passengerId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with given id: " + passengerId));
+        if(!user.isPassenger()) {
+            throw new IllegalStateException("User must have PASSENGER role");
+        }
+
+        Long scheduleId = ticketDto.getScheduleId();
+        Schedule schedule = scheduleRepository.findById(scheduleId)
+                        .orElseThrow(() -> new ResourceNotFoundException("Schedule not found with given id: " + scheduleId));
+
+        Long originStopId = ticketDto.getOriginStopId();
+        Long destinationStopId = ticketDto.getDestinationStopId();
+        Stop originStop = stopRepository.findById(originStopId)
+                        .orElseThrow(() -> new ResourceNotFoundException("Stop not found with given id: " + originStopId));
+        Stop destinatiionStop = stopRepository.findById(destinationStopId)
+                .orElseThrow(() -> new ResourceNotFoundException("Stop not found with given id: " + destinationStopId));
+
+        ticket.setPassenger(user);
+        ticket.setSchedule(schedule);
+        ticket.setOriginStop(originStop);
+        ticket.setDestinationStop(destinatiionStop);
+
+        Ticket addedTicket = ticketRepository.save(ticket);
+
+        return modelMapper.map(addedTicket, TicketDto.class);
     }
 
     @Override
     public TicketDto getTicket(Long ticketId) {
-        return null;
+        Ticket ticket = ticketRepository.findById(ticketId)
+                .orElseThrow(() -> new ResourceNotFoundException("Ticket not found with given id: " + ticketId));
+        return modelMapper.map(ticket, TicketDto.class);
     }
 
     @Override
     public List<TicketDto> getAllTickets() {
-        return List.of();
-    }
-
-    @Override
-    public TicketDto updateTicket(Long ticketId, TicketDto ticketDto) {
-        return null;
+        return ticketRepository.findAll().stream()
+                .map(ticket -> modelMapper.map(ticket, TicketDto.class))
+                .toList();
     }
 
     @Override
@@ -65,17 +96,24 @@ public class TicketServiceImpl implements TicketService {
 
     @Override
     public List<TicketDto> getTicketsByPassenger(Long passengerId) {
-        return List.of();
+        return ticketRepository.findByPassengerId(passengerId).stream()
+                .map(ticket -> modelMapper.map(ticket, TicketDto.class))
+                .toList();
     }
 
     @Override
     public List<TicketDto> getTicketsBySchedule(Long scheduleId) {
-        return List.of();
+        return ticketRepository.findByScheduleId(scheduleId).stream()
+                .map(ticket -> modelMapper.map(ticket, TicketDto.class))
+                .toList();
     }
 
     @Override
     public List<TicketDto> getActiveTicketsByPassenger(Long passengerId) {
-        return List.of();
+        return ticketRepository.findByPassengerId(passengerId).stream()
+                .filter(ticket -> ticket.getStatus().equals(TicketStatus.PAID) || ticket.getStatus().equals(TicketStatus.PENDING))
+                .map(ticket -> modelMapper.map(ticket, TicketDto.class))
+                .toList();
     }
 
     @Override
@@ -85,6 +123,10 @@ public class TicketServiceImpl implements TicketService {
 
     @Override
     public TicketDto cancelTicket(Long ticketId) {
-        return null;
+        Ticket ticket = ticketRepository.findById(ticketId)
+                .orElseThrow(() -> new ResourceNotFoundException("Ticket not found with given id: " + ticketId));
+        ticket.cancel();
+        Ticket canclledTicket = ticketRepository.save(ticket);
+        return modelMapper.map(canclledTicket, TicketDto.class);
     }
 }

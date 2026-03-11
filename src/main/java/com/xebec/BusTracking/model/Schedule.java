@@ -69,14 +69,14 @@ public class Schedule {
 
 
     /**
-     * Check if schedule is active
+     * Check if the schedule is active
      */
     public boolean isActive() {
         return ScheduleStatus.ACTIVE.equals(this.status);
     }
 
     /**
-     * Check if schedule is currently valid based on effective and expiry dates
+     * Check if the schedule is currently valid based on effective and expiry dates
      */
     public boolean isCurrentlyValid() {
         LocalDate today = LocalDate.now();
@@ -86,7 +86,7 @@ public class Schedule {
     }
 
     /**
-     * Check if schedule is expired
+     * Check if the schedule is expired
      */
     public boolean isExpired() {
         if (expiryDate == null) {
