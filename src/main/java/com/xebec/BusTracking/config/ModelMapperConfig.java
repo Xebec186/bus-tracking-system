@@ -59,6 +59,14 @@ public class ModelMapperConfig {
                 });
 
 
+        // ---------------------------
+        // ScheduleDay → ScheduleDayDto
+        // ---------------------------
+        modelMapper.typeMap(ScheduleDay.class, ScheduleDayDto.class)
+                .addMappings(mapper -> {
+                    mapper.map(src -> src.getSchedule().getId(), ScheduleDayDto::setScheduleId);
+                });
+
         return modelMapper;
     }
 }
