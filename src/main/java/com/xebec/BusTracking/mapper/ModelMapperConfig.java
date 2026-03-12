@@ -1,4 +1,4 @@
-package com.xebec.BusTracking.config;
+package com.xebec.BusTracking.mapper;
 
 import com.xebec.BusTracking.dto.*;
 import com.xebec.BusTracking.model.*;

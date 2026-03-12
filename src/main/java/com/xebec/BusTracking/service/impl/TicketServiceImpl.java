@@ -55,7 +55,7 @@ public class TicketServiceImpl implements TicketService {
                         .orElseThrow(() -> new ResourceNotFoundException("Stop not found with given id: " + originStopId));
         Stop destinationStop = stopRepository.findById(destinationStopId)
                 .orElseThrow(() -> new ResourceNotFoundException("Stop not found with given id: " + destinationStopId));
-        ScheduleDay scheduleDay = scheduleDayRepository.findByScheduleIdAndDayOfWeek(scheduleId, day)
+        ScheduleDay scheduleDay = scheduleDayRepository.findByScheduleIdAndDay(scheduleId, day)
                 .orElseThrow(() -> new ResourceNotFoundException("Schedule not available on: " + day));
 
         ticket.setPassenger(user);
@@ -173,7 +173,7 @@ public class TicketServiceImpl implements TicketService {
     public BigDecimal calculatePrice(Schedule schedule, Stop origin, Stop destination) {
 
         List<RouteStop> routeStops = routeStopRepository
-                .findByRouteIdOrderByStopOrder(schedule.getRoute().getId());
+                .findByRouteIdOrderByStopSequence(schedule.getRoute().getId());
 
         RouteStop originRouteStop = routeStops.stream()
                 .filter(rs -> rs.getStop().getId().equals(origin.getId()))

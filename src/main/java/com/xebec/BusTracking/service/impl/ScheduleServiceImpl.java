@@ -106,9 +106,6 @@ public class ScheduleServiceImpl implements ScheduleService {
             schedule.setRoute(route);
         }
 
-        schedule.setDepartureTime(scheduleDto.getDepartureTime());
-        schedule.setArrivalTime(scheduleDto.getArrivalTime());
-        schedule.setDaysOfWeek(scheduleDto.getDaysOfWeek());
         schedule.setEffectiveDate(scheduleDto.getEffectiveDate());
         schedule.setExpiryDate(scheduleDto.getExpiryDate());
         schedule.setStatus(scheduleDto.getStatus());

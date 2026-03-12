@@ -10,6 +10,6 @@ import java.util.Optional;
 
 @Repository
 public interface ScheduleDayRepository extends JpaRepository<ScheduleDay, Long> {
-    Optional<ScheduleDay> findByScheduleIdAndDayOfWeek(Long scheduleId, DayOfWeek dayOfWeek);
+    Optional<ScheduleDay> findByScheduleIdAndDay(Long scheduleId, DayOfWeek dayOfWeek);
     List<ScheduleDay> findByScheduleId(Long scheduleId);
 }

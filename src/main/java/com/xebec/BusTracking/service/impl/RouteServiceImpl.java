@@ -19,7 +19,6 @@ import java.util.List;
 public class RouteServiceImpl implements RouteService {
 
     private final RouteRepository routeRepository;
-    private final RouteStopRepository routeStopRepository;
     private final ModelMapper modelMapper;
 
     @Override

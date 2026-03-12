@@ -56,7 +56,6 @@ public class Ticket {
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal price;
 
-
     @Column(nullable = false)
     private LocalDate date;
 
@@ -202,63 +201,5 @@ public class Ticket {
      */
     public String getDestinationStopName() {
         return destinationStop != null ? destinationStop.getName() : null;
-    }
-
-    /**
-     * Get ticket journey description
-     */
-    public String getJourneyDescription() {
-        return String.format("%s: %s → %s",
-            getRouteNumber(),
-            getOriginStopName(),
-            getDestinationStopName()
-        );
-    }
-
-    /**
-     * Get formatted price
-     */
-    public String getFormattedPrice() {
-        return String.format("GHS %.2f", price);
-    }
-
-    /**
-     * Validate origin and destination are different
-     */
-    @PrePersist
-    @PreUpdate
-    private void validateStops() {
-        if (originStop != null && destinationStop != null) {
-            if (originStop.getId().equals(destinationStop.getId())) {
-                throw new IllegalArgumentException(
-                    "Origin and destination stops must be different"
-                );
-            }
-        }
-    }
-
-    /**
-     * Validate passenger has PASSENGER role
-     */
-    @PrePersist
-    @PreUpdate
-    private void validatePassenger() {
-        if (passenger != null && !passenger.isPassenger()) {
-            throw new IllegalArgumentException(
-                "Ticket passenger must have PASSENGER role"
-            );
-        }
-    }
-
-    /**
-     * Validate validity date is not in the past
-     */
-    @PrePersist
-    private void validateValidityDate() {
-        if (validityDate != null && validityDate.isBefore(LocalDate.now())) {
-            throw new IllegalArgumentException(
-                "Validity date cannot be in the past"
-            );
-        }
     }
 }

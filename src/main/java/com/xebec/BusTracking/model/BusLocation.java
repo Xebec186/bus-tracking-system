@@ -51,7 +51,6 @@ public class BusLocation {
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
     }
@@ -157,11 +156,16 @@ public class BusLocation {
     /**
      * Validate timestamp is not in the future
      */
-    @PrePersist
     @PreUpdate
     private void validateTimestamp() {
         if (timestamp != null && timestamp.isAfter(LocalDateTime.now())) {
             throw new IllegalArgumentException("Location timestamp cannot be in the future");
         }
+    }
+
+    @PrePersist
+    private void prePersistMethods() {
+        validateTimestamp();
+        onCreate();
     }
 }

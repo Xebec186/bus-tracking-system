@@ -43,36 +43,4 @@ public class RouteStop {
 
     @Column(nullable = false)
     private Integer estimatedArrivalMinutes;
-
-    /**
-     * Get estimated arrival time in hours and minutes format
-     */
-    public String getFormattedArrivalTime() {
-        if (estimatedArrivalMinutes == null) {
-            return "N/A";
-        }
-
-        int hours = estimatedArrivalMinutes / 60;
-        int minutes = estimatedArrivalMinutes % 60;
-
-        if (hours > 0) {
-            return String.format("%dh %dm", hours, minutes);
-        } else {
-            return String.format("%dm", minutes);
-        }
-    }
-
-    /**
-     * Get stop name
-     */
-    public String getStopName() {
-        return stop != null ? stop.getName() : null;
-    }
-
-    /**
-     * Get route number
-     */
-    public String getRouteNumber() {
-        return route != null ? route.getNumber() : null;
-    }
 }
