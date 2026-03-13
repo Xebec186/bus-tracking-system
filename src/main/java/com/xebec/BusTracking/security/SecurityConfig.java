@@ -41,26 +41,26 @@ public class SecurityConfig {
                 .build();
     }
 
-//    @Bean
-//    @Order(2)
-//    public SecurityFilterChain securityFilterChain(HttpSecurity http) {
-//        return http
-//                .securityMatcher("/**")
-//                .authorizeHttpRequests(requests -> requests
-//                        .requestMatchers("/login", "/css/login.css").permitAll()
-//                        .anyRequest()
-//                        .authenticated())
-//                .formLogin(form -> form
-//                        .loginPage("/login")
-//                        .defaultSuccessUrl("/notes", true)
-//                        .permitAll()
-//                )
-//                .logout(logout -> logout
-//                        .logoutUrl("/logout")
-//                        .logoutSuccessUrl("/login")
-//                )
-//                .build();
-//    }
+    @Bean
+    @Order(2)
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) {
+        return http
+                .securityMatcher("/**")
+                .authorizeHttpRequests(requests -> requests
+                        .requestMatchers("/login", "/css/login.css").permitAll()
+                        .anyRequest()
+                        .authenticated())
+                .formLogin(form -> form
+                        .loginPage("/login")
+                        .defaultSuccessUrl("/notes", true)
+                        .permitAll()
+                )
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/login")
+                )
+                .build();
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
